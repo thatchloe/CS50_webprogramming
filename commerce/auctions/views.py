@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from datetime import datetime
 from .models import User, Listing, Bid, Comment, Watchlist, Closedbid, Alllisting
-
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     items = Listing.objects.all()
@@ -70,7 +70,7 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
-
+@login_required(redirect_field_name='index')
 def create(request):
     try:
         w = Watchlist.objects.filter(user=request.user.username)
@@ -81,6 +81,8 @@ def create(request):
         "wcount":wcount
     })
         
+
+@login_required(redirect_field_name='index')
 def createsubmit(request):
     if request.method == "POST":
         listing = Listing()
@@ -153,59 +155,66 @@ def listing(request, listingid):
     })
             
 
-def addwatchlist(request, listingid):
-    if request.user.username:
-        w = Watchlist()
-        w.user = request.user.username
-        w.watchlist_listingid = listingid
-        w.listing = Listing.objects.get(id=listingid)
-        w.save()
-        return redirect('listing',listingid=listingid)
-    else:
-        return redirect('index')
 
-def removewatchlist(request, listingid):
-    if request.user.username:
-        try:
-            w = Watchlist.objects.get(user=request.user.username,watchlist_listingid=listingid, listing=Listing.objects.get(id=listingid))
-            w.delete()
-            return redirect('listing',listingid=listingid)
-        except:
-            return redirect('listing',listingid=listingid)
-    else:
-        return redirect('index')
+
+@login_required(redirect_field_name='index')
+def addwatchlist(request, listingid):
+    w = Watchlist()
+    w.user = request.user.username
+    w.watchlist_listingid = listingid
+    w.listing = Listing.objects.get(id=listingid)
+    w.save()
+    return redirect('listing',listingid=listingid)
    
 
+
+
+
+
+@login_required(redirect_field_name='index')
+def removewatchlist(request, listingid):
+    try:
+        w = Watchlist.objects.get(user=request.user.username,watchlist_listingid=listingid, listing=Listing.objects.get(id=listingid))
+        w.delete()
+        return redirect('listing',listingid=listingid)
+    except:
+        return redirect('listing',listingid=listingid)
+        
+
+
+
+@login_required(redirect_field_name='index')
 def watchlist(request,username):
-    if request.user.username:
+    try:
+        w = Watchlist.objects.filter(user=username)
+        items = []
+        for i in w:
+            items.append(Listing.objects.filter(id=i.watchlist_listingid))
         try:
-            w = Watchlist.objects.filter(user=username)
-            items = []
-            for i in w:
-                items.append(Listing.objects.filter(id=i.watchlist_listingid))
-            try:
-                w = Watchlist.objects.filter(user=request.user.username)
-                wcount=len(w)
-            except:
-                wcount=None
-            return render(request,"auctions/watchlist.html",{
-                "items":items,
-                "wcount":wcount
-            })
+            w = Watchlist.objects.filter(user=request.user.username)
+            wcount=len(w)
         except:
-            try:
-                w = Watchlist.objects.filter(user=request.user.username)
-                wcount=len(w)
-            except:
-                wcount=None
-            return render(request,"auctions/watchlist.html",{
-                "items":None,
-                "wcount":wcount
-            })
-    else:
-        return redirect('index')
+            wcount=None
+        return render(request,"auctions/watchlist.html",{
+            "items":items,
+            "wcount":wcount
+        })
+    except:
+        try:
+            w = Watchlist.objects.filter(user=request.user.username)
+            wcount=len(w)
+        except:
+            wcount=None
+        return render(request,"auctions/watchlist.html",{
+            "items":None,
+            "wcount":wcount
+        })
+    
 
 
+
+
+@login_required(redirect_field_name='index')
 def bidsubmit(request, listingid):
     listing = Listing.objects.get(id=listingid)
     current_bid = listing.price
@@ -245,103 +254,101 @@ def bidsubmit(request, listingid):
        
     else:
         return redirect('index')
-                    
+
+
+
+
+@login_required(redirect_field_name='index')                   
 def closebid(request, listingid):
-    if request.user.username:
-        try:
-            listing = Listing.objects.get(id=listingid)
-        except:
-            return redirect('index')
-        closedbid = Closedbid()
-        title = listing.title
-        closedbid.owner = listing.owner
-        closedbid.closedbid_listingid = listingid
-        try:
-            bidrow = Bid.objects.get(bid_listingid=listingid, bid=listing.price)           
-            closedbid.winner = bidrow.user
-            closedbid.winprice = bidrow.bid
-            closedbid.save()
-            bidrow.delete()
-        except:
-            closedbid.winner = listing.owner
-            closedbid.winprice = listing.price
-            closedbid.save()
-        
-        try:
-            cblist = Closedbid.objects.get(closedbid_listingid=listingid)
-        except:
-            closedbid.owner = listing.owner
-            closedbid.winner = listing.owner
-            closedbid.closedbid_listingid = listingid
-            closedbid.winprice = listing.price
-            closedbid.save()
-            cblist = Closedbid.objects.get(closedbid_listingid=listingid)
-        listing.delete()
-        
-        try:
-            w = Watchlist.objects.filter(user=request.user.username)
-            wcount=len(w)
-        except:
-            wcount=None
-        return render(request,"auctions/winningpage.html",{
-            "cb":cblist,
-            "title":title,
-            "wcount":wcount
-        })   
-
-    else:
-        return redirect('index')     
-
-        
-
-
-def winnings(request):
-    if request.user.username:
-        items = []
-        try:
-            wonitems = Closedbid.objects.filter(winner=request.user.username)
-            for i in wonitems:
-                items.append(Alllisting.objects.filter(Alllisting_listingid=i.closedbid_listingid))
-        except:
-            wonitems = None
-            items = None
-        
-        try:
-            w = Watchlist.objects.filter(user=request.user.username)
-            wcount = len(w)
-        except:
-            wcount = None
-        
-        return render(request, 'auctions/winnings.html',{
-            "items": items,
-            "wcount": wcount,
-            "wonitems": wonitems
-            })
-    else:
+    try:
+        listing = Listing.objects.get(id=listingid)
+    except:
         return redirect('index')
+    closedbid = Closedbid()
+    title = listing.title
+    closedbid.owner = listing.owner
+    closedbid.closedbid_listingid = listingid
+    try:
+        bidrow = Bid.objects.get(bid_listingid=listingid, bid=listing.price)           
+        closedbid.winner = bidrow.user
+        closedbid.winprice = bidrow.bid
+        closedbid.save()
+        bidrow.delete()
+    except:
+        closedbid.winner = listing.owner
+        closedbid.winprice = listing.price
+        closedbid.save()
+    
+    try:
+        cblist = Closedbid.objects.get(closedbid_listingid=listingid)
+    except:
+        closedbid.owner = listing.owner
+        closedbid.winner = listing.owner
+        closedbid.closedbid_listingid = listingid
+        closedbid.winprice = listing.price
+        closedbid.save()
+        cblist = Closedbid.objects.get(closedbid_listingid=listingid)
+    listing.delete()
+    
+    try:
+        w = Watchlist.objects.filter(user=request.user.username)
+        wcount=len(w)
+    except:
+        wcount=None
+    return render(request,"auctions/winningpage.html",{
+        "cb":cblist,
+        "title":title,
+        "wcount":wcount
+    })   
+
+      
+
+        
+
+@login_required(redirect_field_name='index')
+def winnings(request):
+    items = []
+    try:
+        wonitems = Closedbid.objects.filter(winner=request.user.username)
+        for i in wonitems:
+            items.append(Alllisting.objects.filter(Alllisting_listingid=i.closedbid_listingid))
+    except:
+        wonitems = None
+        items = None
+    
+    try:
+        w = Watchlist.objects.filter(user=request.user.username)
+        wcount = len(w)
+    except:
+        wcount = None
+    
+    return render(request, 'auctions/winnings.html',{
+        "items": items,
+        "wcount": wcount,
+        "wonitems": wonitems
+            })
+    
                 
             
             
-
+@login_required(redirect_field_name='index')
 def cmntsubmit(request, listingid):
-    if request.user.username:
-        try:
-            listing = Listing.objects.get(id=listingid)
-        except:
-            return redirect('index')
-        if request.method == 'POST':
-            comnt = request.POST.get('comment')
-            comment = Comment()
-            comment.user = request.user.username
-            comment.comment = comnt
-            comment.comment_listingid = listing.id
-            comment.listing = listing
-            comment.save()
-            return redirect('listing',listingid=listingid)
-        else:
-            return redirect('index')
+    try:
+        listing = Listing.objects.get(id=listingid)
+    except:
+        return redirect('index')
+    if request.method == 'POST':
+        comnt = request.POST.get('comment')
+        comment = Comment()
+        comment.user = request.user.username
+        comment.comment = comnt
+        comment.comment_listingid = listing.id
+        comment.listing = listing
+        comment.save()
+        return redirect('listing',listingid=listingid)
     else:
         return redirect('index')
+    
             
 
 def categories(request):
