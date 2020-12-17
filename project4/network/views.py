@@ -1,11 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from .models import User, Post, Like, UserFollowing
-from django.contrib.auth.decorators import login_required
+from .models import User, Post, UserFollowing
+from django.contrib.auth.decorators import login_required, csrf_exempt
 from django.core.paginator import Paginator
 
 def index(request):
@@ -132,22 +132,24 @@ def profile(request, profile_id):
             })
     
 @login_required
-def follow(request, follow_id):
-    following = UserFollowing.objects.create(user_id=follow_id, follow_user_id=request.user.id)
-    follower = UserFollowing.objects.create(user_id=request.user.id, follow_user_id=follow_id)
-    following.save()
-    follower.save()
+def follow(request):
+    if request.method == 'POST':
+        follow_id = request.POST.get('follow_id')
+        following = UserFollowing.objects.create(user_id=follow_id, following_user_id=request.user.id)
+        following.save()
+    
    
     return redirect("profile", profile_id=follow_id)
 
 
 
 @login_required
-def unfollow(request, unfollow_id):
-    following = UserFollowing.objects.create(user_id=unfollow_id, follow_user_id=request.user.id)
-    follower = UserFollowing.objects.create(user_id=request.user.id, follow_user_id=unfollow_id)
-    following.remove()
-    follower.remove()
+def unfollow(request):
+    if request.method == 'POST':
+        unfollow_id = request.POST.get('unfollow_id')
+        following = UserFollowing.objects.filter(user_id=unfollow_id, follow_user_id=request.user.id)
+        following.remove()
+    
     
     return redirect("profile", profile_id=unfollow_id)
     
@@ -169,7 +171,41 @@ def following(request):
             "posts": posts
             }) 
         
-        
+@login_required
+def like(request):
+    if request.method == 'POST':
+        post_id = request.POST.get('id')
+        user = User.objects.get(id=request.user.id)
+        try:
+            post = Post.objects.filter(id=post_id)
+        except:
+            return redirect("index")
+    if user in post.like:
+        post.like.remove(user)
+    else:
+        post.like.add(user)
 
+
+
+@login_required
+@csrf_exempt
+def edit(request):
+    if request.method == 'POST':
+        post_id = request.POST.get('id')
+        new_post = request.POST.get('post')
+        try:
+            post = Post.objects.get(id=post_id)
+            if post.user == request.user:
+                post.content = new_post.strip()
+                post.save()
+                return JsonResponse({}, status=201)
+        except:
+            return JsonResponse({}, status=404)
+    
+    return JsonResponse({}, status=400)
+        
+    
+    
+    
 
     
