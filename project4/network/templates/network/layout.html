@@ -1,49 +1,110 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>{% block title %}Social Network{% endblock %}</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link href="{% static 'network/styles.css' %}" rel="stylesheet">
-    </head>
-    <body>
+<html  >
+<head>
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Network</a>
-          
-            <div>
-              <ul class="navbar-nav mr-auto">
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><strong>{{ user.username }}</strong></a>
-                    </li>
-                {% endif %}
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'index' %}">All Posts</a>
-                </li>
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Following</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
-                    </li>
-                {% endif %}
-              </ul>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Mobirise v5.2.0, mobirise.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <link rel="shortcut icon" href="{% static 'network/assets/images/mbr-182x134.jpg' %}" type="image/x-icon">
+  <meta name="description" content="">
+  
+  
+  <title>Twittme</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'network/assets/web/assets/mobirise-icons2/mobirise2.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/tether/tether.min.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/bootstrap/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/bootstrap/css/bootstrap-grid.min.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/bootstrap/css/bootstrap-reboot.min.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/formstyler/jquery.formstyler.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/formstyler/jquery.formstyler.theme.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/datepicker/jquery.datetimepicker.min.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/dropdown/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/socicon/css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/theme/css/style.css' %}">
+  <link rel="preload" as="style" href="{% static 'network/assets/mobirise/css/mbr-additional.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/mobirise/css/mbr-additional.css' %}" type="text/css">
+  
+  
+  
+  
+</head>
+<body>
+  
+  <section class="menu cid-s48OLK6784" once="menu" id="menu1-h">
+    
+    <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
+        <div class="container">
+            <div class="navbar-brand">
+                <span class="navbar-logo">
+                    <a href="{% url 'index' %}">
+                        <img src="{% static 'network/assets/images/mbr-182x134.jpg' %}" alt="logo" style="height: 3.8rem;">
+                    </a>
+                </span>
+                <span class="navbar-caption-wrap">
+                    <span class="navbar-caption-wrap">
+                            <a class="navbar-caption text-secondary display-7" href="{% url 'index' %}">Twittme</a>
+                    </span>
+                    {% if user.is_authenticated %}
+                        <span class="navbar-caption-wrap">
+                            <a class="navbar-caption text-secondary display-7" href="{% url 'profile' user.username %}">{{user.username}}</a>
+                        </span>
+                    {% endif %}
+                        <span class="navbar-caption-wrap">
+                            <a class="navbar-caption text-secondary display-7" href="{% url 'allposts' %}">All Posts</a>
+                        </span>
+                    {% if user.is_authenticated %}
+                        <span class="navbar-caption-wrap">
+                            <a class="navbar-caption text-secondary display-7" href="{% url 'following' %}">Following</a>
+                        </span>
+                    {% endif %}
+                </span>
             </div>
-          </nav>
-        
-        <div class="body">
-            {% block body %}
-            {% endblock %}
+            
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link link text-black display-4" href="{% url 'logout' %}">Log Out</a></li>
+                {% else %}
+                    <ul class="navbar-nav nav-dropdown nav-right" data-app-modern-menu="true">
+                        <li class="nav-item"><a class="nav-link link text-black display-4" href="{% url 'login' %}">Log In</a></li>
+                        <li class="nav-item"><a class="nav-link link text-black display-4" href="{% url 'register' %}">Register</a></li>
+                    </ul>
+                {% endif %}
+             
+            </div>
         </div>
+    </nav>
+
+</section>
+
+
+
+<script src="{% static 'network/assets/web/assets/jquery/jquery.min.js' %}"></script>  
+<script src="{% static 'network/assets/popper/popper.min.js' %}"></script>
+<script src="{% static 'network/assets/tether/tether.min.js' %}"></script>  
+<script src="{% static 'network/assets/bootstrap/js/bootstrap.min.js' %}"></script>  
+<script src="{% static 'network/assets/smoothscroll/smooth-scroll.js' %}"></script>  
+<script src="{% static 'network/assets/parallax/jarallax.min.js' %}"></script>  
+<script src="{% static 'network/assets/formstyler/jquery.formstyler.js' %}"></script>  
+<script src="{% static 'network/assets/formstyler/jquery.formstyler.min.js' %}"></script>  
+<script src="{% static 'network/assets/datepicker/jquery.datetimepicker.full.js' %}"></script>  
+<script src="{% static 'network/assets/dropdown/js/nav-dropdown.js' %}"></script>  
+<script src="{% static 'network/assets/dropdown/js/navbar-dropdown.js' %}"></script>  
+<script src="{% static 'network/assets/touchswipe/jquery.touch-swipe.min.js' %}"></script>  
+<script src="{% static 'network/assets/theme/js/script.js' %}"></script>  
+<script src="{% static 'network/assets/formoid/formoid.min.js' %}"></script>  
+<input name="cookieData" type="hidden" data-cookie-customDialogSelector='null' data-cookie-colorText='#424a4d' data-cookie-colorBg='rgba(234, 239, 241, 0.99)' data-cookie-textButton='Agree' data-cookie-colorButton='' data-cookie-colorLink='#424a4d' data-cookie-underlineLink='true' data-cookie-text="We use cookies to give you the best experience. Read our <a href='privacy.html'>cookie policy</a>.">  
+
+
+
+<div class="body">
+   {% block body %}
+   {% endblock %}
+</div>  
+    
+    
     </body>
 </html>
+        

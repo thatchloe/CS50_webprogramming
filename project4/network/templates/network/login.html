@@ -1,24 +1,158 @@
-{% extends "network/layout.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html  >
+<head>
+    <title>Login</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="shortcut icon" href="{% static 'network/assets/images/mbr-182x134.jpg' %}" type="image/x-icon">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'network/vendor/bootstrap/css/bootstrap.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'network/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'network/fonts/iconic/css/material-design-iconic-font.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'network/vendor/animate/animate.css' %}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{% static 'network/vendor/css-hamburgers/hamburgers.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'network/vendor/animsition/css/animsition.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'network/vendor/select2/select2.min.css' %}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{% static 'network/vendor/daterangepicker/daterangepicker.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'network/css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'network/css/main.css' %}">
+<!--===============================================================================================-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'network/assets/web/assets/mobirise-icons2/mobirise2.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/tether/tether.min.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/bootstrap/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/bootstrap/css/bootstrap-grid.min.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/bootstrap/css/bootstrap-reboot.min.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/formstyler/jquery.formstyler.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/formstyler/jquery.formstyler.theme.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/datepicker/jquery.datetimepicker.min.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/dropdown/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/socicon/css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/theme/css/style.css' %}">
+  <link rel="preload" as="style" href="{% static 'network/assets/mobirise/css/mbr-additional.css' %}">
+  <link rel="stylesheet" href="{% static 'network/assets/mobirise/css/mbr-additional.css' %}" type="text/css">
+</head>
+<body>
+    <section class="menu cid-s48OLK6784" once="menu" id="menu1-h">    
+        <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
+            <div class="container">
+                <div class="navbar-brand">
+                    <span class="navbar-logo">
+                        <a href="{% url 'index' %}">
+                            <img src="{% static 'network/assets/images/mbr-182x134.jpg' %}" alt="logo" style="height: 3.8rem;">
+                        </a>
+                    </span>
+                    <span class="navbar-caption-wrap">
+                            <a class="navbar-caption text-secondary display-7" href="{% url 'index' %}">Twittme</a>
+                    </span>
+                </div>
+            </div>
+        </nav>
+    </section>
+    
 
-{% block body %}
 
-    <h2>Login</h2>
-
-    {% if message %}
+	{% if message %}
         <div>{{ message }}</div>
     {% endif %}
 
-    <form action="{% url 'login' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input autofocus class="form-control" type="text" name="username" placeholder="Username">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Login">
-    </form>
+	<div class="limiter">
+		<div class="container-login100" style="background-image: url('images/bg-01.jpg');">
+			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
+				<form action="{% url 'login' %}" method="post" class="login100-form validate-form">
+					<span class="login100-form-title p-b-49">
+						Login
+					</span>
+					{% csrf_token %}
+					<div class="wrap-input100 validate-input m-b-23" data-validate = "Username is required">
+						<span class="label-input100">Username</span>
+						<input autofocus class="input100" type="text" name="username" placeholder="Type your username">
+						<span class="focus-input100" data-symbol="&#xf206;"></span>
+					</div>
 
-    Don't have an account? <a href="{% url 'register' %}">Register here.</a>
+					<div class="wrap-input100 validate-input" data-validate="Password is required">
+						<span class="label-input100">Password</span>
+						<input class="input100" type="password" name="password" placeholder="Type your password">
+						<span class="focus-input100" data-symbol="&#xf190;"></span>
+					</div>
+					
+					<div class="text-right p-t-8 p-b-31">
+						<a href="#">
+							Forgot password?
+						</a>
+					</div>
+					
+					<div class="container-login100-form-btn">
+						<div class="wrap-login100-form-btn">
+							<div class="login100-form-bgbtn"></div>
+							
+							<button class="login100-form-btn">
+								Login
+							</button>
+						
+						</div>
+					</div>
 
-{% endblock %}
+					<div class="flex-col-c p-t-155">
+						<span class="txt1 p-b-17">
+							Don't have an account? Sign Up Using
+						</span>
+
+						<a href="{% url 'register' %}" class="txt2">
+							Sign Up
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+
+	<div id="dropDownSelect1"></div>
+	
+<!--===============================================================================================-->
+	<script src="{% static 'network/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'network/vendor/animsition/js/animsition.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'network/vendor/bootstrap/js/popper.js' %}"></script>
+	<script src="{% static 'network/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'network/vendor/select2/select2.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'network/vendor/daterangepicker/moment.min.js' %}"></script>
+	<script src="{% static 'network/vendor/daterangepicker/daterangepicker.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'network/vendor/countdowntime/countdowntime.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'network/js/main.js' %}"></script>
+	<script src="{% static 'network/assets/web/assets/jquery/jquery.min.js' %}"></script>  
+    <script src="{% static 'network/assets/popper/popper.min.js' %}"></script>
+    <script src="{% static 'network/assets/tether/tether.min.js' %}"></script>  
+    <script src="{% static 'network/assets/bootstrap/js/bootstrap.min.js' %}"></script>  
+    <script src="{% static 'network/assets/smoothscroll/smooth-scroll.js' %}"></script>  
+    <script src="{% static 'network/assets/parallax/jarallax.min.js' %}"></script>  
+    <script src="{% static 'network/assets/formstyler/jquery.formstyler.js' %}"></script>  
+    <script src="{% static 'network/assets/formstyler/jquery.formstyler.min.js' %}"></script>  
+    <script src="{% static 'network/assets/datepicker/jquery.datetimepicker.full.js' %}"></script>  
+    <script src="{% static 'network/assets/dropdown/js/nav-dropdown.js' %}"></script>  
+    <script src="{% static 'network/assets/dropdown/js/navbar-dropdown.js' %}"></script>  
+    <script src="{% static 'network/assets/touchswipe/jquery.touch-swipe.min.js' %}"></script>  
+    <script src="{% static 'network/assets/theme/js/script.js' %}"></script>  
+    <script src="{% static 'network/assets/formoid/formoid.min.js' %}"></script>  
+    <input name="cookieData" type="hidden" data-cookie-customDialogSelector='null' data-cookie-colorText='#424a4d' data-cookie-colorBg='rgba(234, 239, 241, 0.99)' data-cookie-textButton='Agree' data-cookie-colorButton='' data-cookie-colorLink='#424a4d' data-cookie-underlineLink='true' data-cookie-text="We use cookies to give you the best experience. Read our <a href='privacy.html'>cookie policy</a>.">  
+
+    
+    </body>
+</html>
+

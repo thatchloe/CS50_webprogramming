@@ -5,8 +5,13 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from .models import User, Post, UserFollowing
-from django.contrib.auth.decorators import login_required, csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+
 from django.core.paginator import Paginator
+
+
+
 
 def index(request):
     try:
@@ -14,6 +19,9 @@ def index(request):
     except:
         posts = None
     return render(request, "network/index.html", {"posts": posts})
+
+
+
 
 
 def login_view(request):
@@ -36,9 +44,15 @@ def login_view(request):
         return render(request, "network/login.html")
 
 
+
+
+
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
+
+
+
 
 
 def register(request):
@@ -69,15 +83,19 @@ def register(request):
     
     
     
-@login_required('index')
+@login_required(login_url='login_view')
 def post_submit(request):
     if request.method == "POST":
         content = request.POST['content']
         post = Post.objects.create(user_id=request.user.id, user=request.user.username, content=content, likes=0)
         post.save()
-        return render(request, "network/index.html")
+        return redirect("index")
+            
     else:
         return redirect("index")
+
+
+
 
 def all_posts(request):
     posts = Post.objects.all().order_by('-time')
@@ -93,11 +111,14 @@ def all_posts(request):
             "posts": posts
             })      
 
-@login_required()
-def profile(request, profile_id):
+
+
+
+@login_required(login_url='login_view')
+def profile(request, username):
     try:
         user = User.objects.get(id=request.user.id)
-        profile = User.objects.get(id=profile_id)
+        profile = User.objects.get(username=username)
         try:
             following = profile.following.all()
             followers = profile.followers.all()
@@ -109,7 +130,7 @@ def profile(request, profile_id):
             following = None
             followers = None
             followed = False
-        posts = Post.objects.filter(user_id=profile_id).order_by('-time') 
+        posts = Post.objects.filter(user=username).order_by('-time') 
         paginator = Paginator(posts, 10)
         
         try:
@@ -131,7 +152,10 @@ def profile(request, profile_id):
             "error": True
             })
     
-@login_required
+
+
+
+@login_required(login_url='login_view')
 def follow(request):
     if request.method == 'POST':
         follow_id = request.POST.get('follow_id')
@@ -143,7 +167,11 @@ def follow(request):
 
 
 
-@login_required
+
+
+
+
+@login_required(login_url='login_view')
 def unfollow(request):
     if request.method == 'POST':
         unfollow_id = request.POST.get('unfollow_id')
@@ -154,7 +182,10 @@ def unfollow(request):
     return redirect("profile", profile_id=unfollow_id)
     
   
-@login_required  
+
+
+
+@login_required(login_url='login_view')
 def following(request):
     user = User.objects.get(id=request.user.id)
     following = user.following.all()
@@ -171,7 +202,10 @@ def following(request):
             "posts": posts
             }) 
         
-@login_required
+
+
+
+@login_required(login_url='login_view')
 def like(request):
     if request.method == 'POST':
         post_id = request.POST.get('id')
@@ -187,7 +221,11 @@ def like(request):
 
 
 
-@login_required
+
+
+
+
+@login_required(login_url='login_view')
 @csrf_exempt
 def edit(request):
     if request.method == 'POST':

@@ -11,7 +11,7 @@ class Post(models.Model):
     user = models.CharField(max_length=64)
     content = models.CharField(max_length=64)
     likes = models.IntegerField()
-    like = models.ManyToManyField("User", on_delete=models.CASCADE, related_name="user_liked", null=True)
+    like = models.ManyToManyField("User", related_name="user_liked")
     time = models.DateTimeField(auto_now_add=True)
     
 

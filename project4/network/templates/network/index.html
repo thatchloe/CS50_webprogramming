@@ -1,5 +1,62 @@
 {% extends "network/layout.html" %}
-
 {% block body %}
-    TODO
+<section class="header1 cid-s48MCQYojq mbr-parallax-background" id="header1-f">
+    <div class="align-center container">
+        <div class="row">
+            <div class="col-12 col-lg-7">
+                <h1 class="mbr-section-title mbr-fonts-style mb-3 display-2"><strong>Twittme</strong></h1>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content1 cid-s48vnjULo4" id="content1-c">
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="title col-12 col-md-12">
+                <h3 class="mbr-section-title mbr-fonts-style align-center mb-4 display-5"><strong>New Post</strong></h3>
+                <div class="container">
+        
+                  <div class="row justify-content-center mt-4">
+                      <div class="col-lg-8 mx-auto mbr-form" data-form-type="formoid">
+                          <form action="{% url 'postsubmit' %}" method="POST" class="mbr-form form-with-styler mx-auto" data-form-title="Form Name"><input type="hidden" name="email" data-form-email="true" value="ymiu6UjYaUq66x5mrXPbfCAkmescX75y+horAHVxETA83vg0Kj8+14hpxdX9vomIPPqBqneiqyHub1Y+RCMlnyHi9PKljXP8Gjfp0gPRUNxJZoWe3lRjNNFVacrqgSSl">
+                              <div class="">
+                                  <div hidden="hidden" data-form-alert="" class="alert alert-success col-12">Posted successfully!</div>
+                                  <div hidden="hidden" data-form-alert-danger="" class="alert alert-danger col-12">Oops...! some problem!</div>
+                              </div>
+                              <div class="dragArea row">
+                                  
+                                  <div class="col-lg-4 col-md-12 col-sm-12 form-group" data-for="email">
+                                      <input type="email" name="email" placeholder="What's Happening" data-form-field="email" class="form-control" value="" id="email-form8-p">
+                                  </div>
+                                  <div class="col-lg-4 col-md-12 col-sm-12 mbr-section-btn align-center"><button type="submit" class="btn btn-info display-4"><span class="mobi-mbri mobi-mbri-paper-plane mbr-iconfont mbr-iconfont-btn"></span>Post</button></div>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content1 cid-s48udlf8KU" id="content1-8">
+{% if posts %}
+    {% for post in posts %}
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="title col-12 col-md-12">
+                    <h3 class="mbr-section-title mbr-fonts-style align-center mb-4 display-7"><strong>{{post.user}}</strong></h3>
+                    <h4 class="mbr-section-subtitle align-center mbr-fonts-style mb-4 display-7">{{post.content}}</h4>
+                    
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+</section>
+
 {% endblock %}
